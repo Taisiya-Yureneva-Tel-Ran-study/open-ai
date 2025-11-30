@@ -1,7 +1,12 @@
 from unittest import TestCase
 from tools import getWeather
+from dotenv import load_dotenv
 
 class TestWeatherIntegration(TestCase):
+    def setUp(self):
+        if not load_dotenv(".env.test"):
+            raise Exception("Failed to load .env.test file")
+        
     def test_get_weather_valid_city(self):
         temp = getWeather("London")
         self.assertIsInstance(temp, (str))
