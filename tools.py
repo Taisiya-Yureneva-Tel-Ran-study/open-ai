@@ -2,6 +2,14 @@ import requests
 import os
 from dotenv import load_dotenv
 
+def initEnv():
+    API_KEY = os.getenv("WEATHER_API_KEY")
+    URL =  os.getenv("WEATHER_URL")
+
+    if not API_KEY or not URL:
+        raise ValueError("API_KEY and URL must be set in environment variables")
+    return API_KEY, URL
+    
 def parseResponse(response: requests.Response) -> str:
     try:
         res = response.json()
@@ -17,15 +25,9 @@ def parseResponse(response: requests.Response) -> str:
     return result
     
 def getWeather(city: str):
-    API_KEY = os.getenv("WEATHER_API_KEY")
-    URL =  os.getenv("WEATHER_URL")
-
-    if not API_KEY or not URL:
-        raise ValueError("API_KEY and URL must be set in environment variables")
-
     if not city:
         raise ValueError("City name cannot be empty")
-    
+    API_KEY, URL = initEnv()
     parameters = f"key={API_KEY}&q={city}"
     try:
         response = requests.get(URL, parameters)
